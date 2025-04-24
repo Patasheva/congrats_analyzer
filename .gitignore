@@ -1,0 +1,29 @@
+# Environnement virtuel
+venv/
+
+# Cache de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+
+# Cache de modèles
+.cache/
+**/.cache/
+*.pt
+*.bin
+
+# Fichiers de log
+*.log
+*.tmp
+
+# Fichiers générés
+*.ipynb_checkpoints
+*.html
+*.pdf
+
+

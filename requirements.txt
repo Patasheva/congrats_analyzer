@@ -1,0 +1,45 @@
+# --- Core Framework & Web Server ---
+Flask
+Flask-Cors
+streamlit
+
+# --- Hugging Face Ecosystem & Core ML/DL ---
+torch 
+torchvision 
+torchaudio
+huggingface_hub 
+sentencepiece 
+protobuf
+ 
+# --- Vidéo, Audio & Image Processing ---
+moviepy        
+opencv-python   
+Pillow          
+librosa         
+soundfile       
+#decord          
+
+# --- Model Specific & Advanced Utilities ---
+qwen-vl-utils
+einops          
+timm            
+bitsandbytes    
+
+# --- Language Detection ---
+langdetect      
+
+# --- File Type Validation ---
+python-magic   
+
+# --- General Utilities ---
+numpy    
+
+# Colab
+transformers==4.51.3
+huggingface-hub==0.30.2
+sentencepiece==0.2.0
+protobuf==5.29.4
+einops==0.8.1
+timm==1.0.15
+accelerate==1.5.2
+
