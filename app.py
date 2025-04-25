@@ -6,9 +6,22 @@ from utils import extract_middle_frame, extract_audio, transcribe_audio, analyze
 from utils import load_whisper_model, load_qwen_model 
 from prompt import prompt
 
-st.set_page_config(page_title="🎥 AI Content Analyzer", layout="centered")
-st.title("🤖 🎥 AI-Powered Content Analyzer")
+# Configuration de la page
+st.set_page_config(page_title="🎥 AI-Powered Video Analyzer", layout="centered")
 
+# Titre principal
+st.title("🤖 🎥 AI-Powered Video Analyzer")
+
+# Description courte
+st.markdown(
+    "<div style='text-align: center; font-size:18px; font-weight:500;'>Marketing Insights from User Content</div>",
+    unsafe_allow_html=True
+)
+
+# Fonctionnalités principales
+st.markdown("### 🔍 Main Features")
+st.markdown("  🎥 **Video Content Analysis**")
+st.markdown("  🧠 **Key Information Extraction**")
 # 1. Upload de la vidéo
 TEMP_FOLDER = os.path.join(os.getcwd(), "temp_files")
 os.makedirs(TEMP_FOLDER, exist_ok=True)
@@ -45,7 +58,7 @@ def display_analysis(analysis_result_json):
         st.error("Erreur lors de la lecture du résultat JSON.")
         st.text(analysis_result_json)
 
-uploaded_file = st.file_uploader("📁 Upload your video to analyze", type=["mp4", "mov", "avi", "mkv"])
+uploaded_file = st.file_uploader("📁 Upload your video", type=["mp4", "mov", "avi", "mkv"])
 
 if uploaded_file:
     temp_video_path = os.path.join(TEMP_FOLDER, "temp_video.mp4") # nom de la vidéo
@@ -59,19 +72,19 @@ transcribed_text = ""
 analysis_result_json = None 
 audio_path = None
 
-if st.button("Lancer l'analyse"):
-    with st.spinner("Analyse de la vidéo en cours..."):
+if st.button("Analyze"):
+    with st.spinner("Video analysis in progress..."):
         try:
-            st.info("🧠 Prétraitement de la vidéo en cours...")
+            st.info("🧠 Video preprocessing in progress…")
 
             # 2. Extraire l'image du milieu
             middle_image_obj = extract_middle_frame(temp_video_path)
             if middle_image_obj:
-                st.subheader("🖼️ Image extraite du milieu:")
-                st.image(middle_image_obj, use_column_width=True)
+                st.subheader("🖼️ Frame extracted :")
+                st.image(middle_image_obj, width=300)
                 middle_image_obj.save(temp_image_path) # Sauvegarde temporaire pour Qwen-VL
             else:
-                st.warning("⚠️ Impossible d'extraire l'image du milieu.")
+                st.warning("⚠️ Unable to extract the frame.")
     
             # 3. Extraire l'audio
             transcription_pipeline = load_whisper_model()
@@ -80,31 +93,31 @@ if st.button("Lancer l'analyse"):
             # 4. Transcrire l'audio
             if audio_path:
                 transcribed_text = transcribe_audio(audio_path, transcription_pipeline)
-                st.subheader("📝 Transcription audio")
+                st.subheader("📝 Audio transcription :")
                 st.info(transcribed_text)
             else:
-                st.warning("🔇 Aucun audio à transcrire.")
+                st.warning("🔇 No audio to transcribe.")
 
             # 5. Analyser l'image et le texte
             if temp_image_path:
                 qwen_vl_processor, qwen_vl_model = load_qwen_model()
-                print("Attributs de qwen_vl_processor :")
+                print("Attributes of qwen_vl_processor :")
                 print(dir(qwen_vl_processor))
                 if qwen_vl_processor and qwen_vl_model:
                         analysis_result_json = analyze_content(temp_image_path, transcribed_text, prompt, qwen_vl_model, qwen_vl_processor, max_new_tokens=2048)
-                        """Analyse l'image (PIL) et le texte avec Qwen-VL."""
-                        st.subheader("📊 Résultat de l'analyse:")
+                        """Analyze the image and text with Qwen2.5-VL-3B."""
+                        st.subheader("📊 Analysis results:")
                         display_analysis(analysis_result_json)
                 else:
-                        st.error("❌ Impossible de procéder à l'analyse sans l'image du milieu.")
+                        st.error("❌ Unable to proceed with the analysis without the frame.")
             else:
-                 st.error("❌ L'image du milieu est introuvable ou le chemin est invalide.")
+                 st.error("❌ The frame is missing or the path is invalid.")
 
         except Exception as e:
-            st.error(f"🔴 Une erreur s'est produite pendant l'analyse : {e}")
+            st.error(f"🔴 An error occurred during the analysis: {e}")
         finally:
-            st.info("🧹 Nettoyage des fichiers temporaires...")
+            st.info("🧹 Cleaning up temporary files...")
             cleanup_files(temp_video_path, audio_path, temp_image_path)
-            st.info("✅ Nettoyage terminé.")
+            st.info("✅ Cleanup completed.")
 else:
-    st.info("⬆️ Veuillez télécharger une vidéo pour lancer l'analyse.")
+    st.info("⬆️ Please upload a video to start the analysis")
